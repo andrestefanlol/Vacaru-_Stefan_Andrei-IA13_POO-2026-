@@ -1,4 +1,6 @@
+#define _CRT_SECURE_NO_WARNINGS
 #include <stdio.h>
+
 int conversie(char s[]) {
 	int nr = 0;
 	for (int i = 0; s[i] >= '0' && s[i] <='9'; i++)
