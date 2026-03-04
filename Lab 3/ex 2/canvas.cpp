@@ -12,6 +12,13 @@ Canvas::Canvas(int width, int height)
 	{
 		mat[i] = new char[width];
 	}
+	for (int i = 0; i < height; i++)
+	{
+		for (int j = 0; j < width; j++)
+		{
+			mat[i][j] = ' ';
+		}
+	}
 }
 Canvas::~Canvas()
 {
