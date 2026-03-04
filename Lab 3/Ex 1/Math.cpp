@@ -24,6 +24,10 @@ int math::Add(int a, int b)
 {
 	 double sum = a + b+c;
 	 int x = int(std::floor(sum));
+	 if (float(sum - x >= 0.5))
+	 {
+		 x++;
+	 }
 	 return x;
 }
  int math::Mul(int a, int b)
@@ -38,12 +42,20 @@ int math::Add(int a, int b)
 {
 	 double sum = a * b;
 	 int x = int(std::floor(sum));
+	 if (double(sum - x >= 0.5))
+	 {
+		 x++;
+	 }
 	 return x;
  }
  int math::Mul(double a, double b, double c)
 {
 	 double sum = a*b*c;
 	 int x = int(std::floor(sum));
+	 if (double(sum - x >= 0.5))
+	 {
+		 x++;
+	 }
 	 return x;
 }
  int math::Add(int count, ...)
