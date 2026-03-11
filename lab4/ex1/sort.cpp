@@ -143,46 +143,44 @@ void Sort::QuickSort(bool ascendent)
 	if (Sort::count <= 1)
 		return;
 	int* st = new int[Sort::count];
-	int top=-1;
-	st[top++] = 0;
-	st[top++] = Sort::count - 1;
+	int top = -1;
+	st[++top] = 0;
+	st[++top] = Sort::count - 1;
+
 	while (top >= 0)
 	{
 		int high = st[top--];
 		int low = st[top--];
 		int pivot = Sort::v[high];
 		int i = low - 1;
-		for (int j = low; j < high-1; j++)
+		for (int j = low; j <= high - 1; j++) 
 		{
 			bool mutat = false;
 			if (ascendent) {
-				if (Sort::v[j] < pivot)
-					mutat = true;
+				if (Sort::v[j] < pivot) mutat = true;
 			}
-			else if (Sort:v[j] > pivot)
-				mutat = true;
-			if (mutat)
-			{
+			else {
+				if (Sort::v[j] > pivot) mutat = true;
+			}
+			if (mutat) {
 				i++;
 				int aux = Sort::v[i];
 				Sort::v[i] = Sort::v[j];
 				Sort::v[j] = aux;
 			}
 		}
-			int temp = Sort::v[i + 1];
-			v[i + 1] = Sort::v[high];
-			v[high] = temp;
-			int p = i + 1;
-			if (p - 1 > low)
-			{
-				st[top++] = low;
-				st[top++] = p - 1;
-			}
-			if (p + 1 < high)
-			{
-				st[top++] = p + 1;
-				st[top++] = high;
-			}
+		int temp = Sort::v[i + 1];
+		Sort::v[i + 1] = Sort::v[high];
+		Sort::v[high] = temp;
+		int p = i + 1; 
+		if (p - 1 > low) {
+			st[++top] = low;
+			st[++top] = p - 1;
+		}
+		if (p + 1 < high) {
+			st[++top] = p + 1;
+			st[++top] = high;
+		}
 	}
 	delete[] st;
 }
