@@ -170,18 +170,114 @@ Number& Number::operator=(const char* val)
 	strcpy(this->value,val);
 	return *this;
 }
+
 Number operator+(const Number& a, const Number& b)
 {
 	int baza = b.baza;
-	if (a.baza > b.baza)
+	if (a.baza < b.baza)
 	{
 		baza = b.baza;
 	}
 
-	int val_a=schimbare_baza(atoi(a.value),a.baza,baza);
-	int val_b=schimbare_baza(atoi(b.value),b.baza,baza);
+	int val_a=schimbare_baza(atoi(a.value),a.baza,10);
+	int val_b=schimbare_baza(atoi(b.value),b.baza,10);
 	int suma=val_a+val_b;
 	Number rezultat(suma);
 	rezultat.SwitchBase(baza);
 	return rezultat;
+}
+Number operator-(const Number& a, const Number& b)
+{
+	int baza = b.baza;
+	if (a.baza < b.baza)
+	{
+		baza = b.baza;
+	}
+	int val_a=schimbare_baza(atoi(a.value),a.baza,10);
+	int val_b=schimbare_baza(atoi(b.value),b.baza,10);
+	int diferenta=val_a-val_b;
+	Number rezultat(diferenta);
+	rezultat.SwitchBase(baza);
+	return rezultat;
+}
+Number operator+=(const Number& a, const Number& b)
+{
+	return a + b;
+}
+bool Number::operator>(const Number& other)
+{
+	int val_a=schimbare_baza(atoi(this->value),this->baza,10);
+	int val_b=schimbare_baza(atoi(other.value),other.baza,10);
+	return val_a>val_b;
+}
+bool Number::operator<(const Number& other)
+{
+	int val_a=schimbare_baza(atoi(this->value),this->baza,10);
+	int val_b=schimbare_baza(atoi(other.value),other.baza,10);
+	return val_a<val_b;
+}
+bool Number::operator==(const Number& other)
+{
+	int val_a=schimbare_baza(atoi(this->value),this->baza,10);
+	int val_b=schimbare_baza(atoi(other.value),other.baza,10);
+	return val_a==val_b;
+}
+bool Number::operator>=(const Number& other)
+{
+	int val_a=schimbare_baza(atoi(this->value),this->baza,10);
+	int val_b=schimbare_baza(atoi(other.value),other.baza,10);
+	return val_a>=val_b;
+}
+bool Number::operator<=(const Number& other)
+{
+	int val_a=schimbare_baza(atoi(this->value),this->baza,10);
+	int val_b=schimbare_baza(atoi(other.value),other.baza,10);
+	return val_a<=val_b;
+}
+Number& Number::operator--()
+{
+	int len=strlen(this->value);
+	if (len>1)
+	{
+		char* new_value=new char[len];
+		strcpy(new_value,this->value+1);
+		delete[] this->value;
+		this->value=new_value;
+	}
+	else
+	{
+		strcpy(this->value,"0");
+	}
+	return *this;
+}
+Number Number::operator--(int)
+{
+	int len=strlen(this->value);
+	Number old(*this);
+	
+	if (len>1)
+	{
+		char* new_value=new char[len];
+		strncpy(new_value,this->value,len-1);
+		new_value[len-1]='\0';
+		delete[] this->value;
+		this->value=new_value;
+	}
+	else
+	{
+		strcpy(this->value,"0");
+	}
+	return old;
+}
+void Number::Print()
+{
+	std::cout<<this->value<<" (base "<<this->baza<<")\n";
+}
+int Number::GetDigitsCount()
+{
+	return strlen(this->value);
+}
+int Number::GetBase()
+{
+	return this->baza;
 }
