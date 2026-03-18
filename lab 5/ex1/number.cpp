@@ -202,7 +202,19 @@ Number operator-(const Number& a, const Number& b)
 }
 Number operator+=(const Number& a, const Number& b)
 {
-	return a + b;
+	int baza = b.baza;
+	if (a.baza < b.baza)
+	{
+		baza = b.baza;
+	}
+
+	int val_a = schimbare_baza(atoi(a.value), a.baza, 10);
+	int val_b = schimbare_baza(atoi(b.value), b.baza, 10);
+	int suma = val_a + val_b;
+	Number rezultat(suma);
+	rezultat.SwitchBase(baza);
+	return rezultat;
+	
 }
 bool Number::operator>(const Number& other)
 {
@@ -280,4 +292,12 @@ int Number::GetDigitsCount()
 int Number::GetBase()
 {
 	return this->baza;
+}
+char Number::operator[](int index)
+{
+	if (index>=0 && index<GetDigitsCount())
+	{
+		return this->value[index];
+	}
+	return '\0';
 }
