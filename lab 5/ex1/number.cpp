@@ -2,38 +2,41 @@
 #include "number.h"
 #include <cstring>
 #include <iostream>
-
+int ValoareBaza10(const char* s, int b) {
+	int rez = 0;
+	for (int i = 0; s[i] != '\0'; i++) {
+		int cifra = (s[i] >= 'A') ? (s[i] - 'A' + 10) : (s[i] - '0');
+		rez = rez * b + cifra;
+	}
+	return rez;
+}
+char* IntLaString(int val, int b) {
+	if (val == 0) { char* z = new char[2]; strcpy(z, "0"); return z; }
+	int c = val, d = 0;
+	while (c)
+	{
+		c /= b;
+		d++;
+	}
+	char* r = new char[d + 1];
+	r[d] = '\0';
+	for (int i = d - 1; i >= 0; i--) {
+		int cif = val % b;
+		r[i] = (cif < 10) ? (cif + '0') : (cif - 10 + 'A');
+		val /= b;
+	}
+	return r;
+}
 Number::Number(const char* value, int base)
-{	this->baza=base;
+{
+	this->baza=base;
 	this->value=new char[strlen(value)+1];
 	strcpy(this->value,value);
 }
 Number::Number(int value)
-{	this->baza=10;
-if (value == 0)
-	{
-		this->value=new char[2];
-		strcpy(this->value,"0");
-		strcpy(this->value, "\0");
-		return;
-	}
-	else
-	{
-		int copy=value;
-		int digits=0;
-		while (copy)
-		{
-			copy/=10;
-			digits++;
-		}
-		this->value=new char[digits+1];
-		this->value[digits]='\0';
-		for (int i=digits-1;i>=0;i--)
-		{
-			this->value[i]=(value%10)+'0';
-			value/=10;
-		}
-	}
+{	
+	this->baza = 10;
+	this->value = IntLaString(value, this->baza);
 }
 Number::Number(const Number& other)
 {	this->baza=other.baza;
@@ -84,42 +87,12 @@ Number& Number::operator=(Number&& other)
 	}
 	return *this;
 }
-int schimbare_baza(int value, int baza_veche, int baza_noua)
-{
-	int rezultat=0;
-	int putere=1;
-	while (value)
-	{
-		int cifra=value%baza_veche;
-		rezultat+=cifra*putere;
-		putere*=baza_noua;
-		value/=baza_veche;
-	}
-	return rezultat;
-}
 void Number::SwitchBase(int newBase)
 {	
-	int val=schimbare_baza(atoi(this->value),this->baza,newBase);
+	int val=ValoareBaza10(this->value,this->baza);
 	this->baza=newBase;
-	int copy=val;
-	int digits=0;
-	while (copy)
-	{
-		copy/=this->baza;
-		digits++;
-	}
 	delete[] this->value;
-	this->value=new char[digits+1];
-	this->value[digits]='\0';
-	for (int i=digits-1;i>=0;i--)
-	{
-		int cifra=val%this->baza;
-		if (cifra<10)
-			this->value[i]=cifra+'0';
-		else
-			this->value[i]=cifra-10+'A';
-		val/=this->baza;
-	}
+	this->value = IntLaString(val, this->baza);
 }
 Number& Number::operator=(int val)
 {
@@ -127,38 +100,8 @@ Number& Number::operator=(int val)
 	{
 		delete[] this->value;
 	}
-	this->baza=10;
-	if (val == 0)
-	{
-		this->value=new char[2];
-		strcpy(this->value,"0");
-		strcpy(this->value, "\0");
-		return *this;
-	}
-	else
-	{	int x=schimbare_baza(val,10,this->baza);
-		int copy=x;
-		int digits=0;
-		while (copy)
-		{
-			copy/=this->baza;
-			digits++;
-		}
-		this->value=new char[digits+1];
-		this->value[digits]='\0';
-		for (int i=digits-1;i>=0;i--)
-		{
-			int cifra=x%this->baza;
-			if (cifra<10)
-				this->value[i]=cifra+'0';
-			else
-				this->value[i]=cifra-10+'A';
-			x/=this->baza;
-		}
-		
-	}
+	this->value = IntLaString(val, this->baza);
 	return *this;
-	
 }
 Number& Number::operator=(const char* val)
 {
@@ -173,14 +116,9 @@ Number& Number::operator=(const char* val)
 
 Number operator+(const Number& a, const Number& b)
 {
-	int baza = b.baza;
-	if (a.baza < b.baza)
-	{
-		baza = b.baza;
-	}
-
-	int val_a=schimbare_baza(atoi(a.value),a.baza,10);
-	int val_b=schimbare_baza(atoi(b.value),b.baza,10);
+	int baza = (a.baza > b.baza) ? a.baza : b.baza;
+	int val_a=ValoareBaza10(a.value,a.baza);
+	int val_b=ValoareBaza10(b.value,b.baza);
 	int suma=val_a+val_b;
 	Number rezultat(suma);
 	rezultat.SwitchBase(baza);
@@ -188,63 +126,39 @@ Number operator+(const Number& a, const Number& b)
 }
 Number operator-(const Number& a, const Number& b)
 {
-	int baza = b.baza;
-	if (a.baza < b.baza)
-	{
-		baza = b.baza;
-	}
-	int val_a=schimbare_baza(atoi(a.value),a.baza,10);
-	int val_b=schimbare_baza(atoi(b.value),b.baza,10);
+	int baza = (a.baza > b.baza) ? a.baza : b.baza;
+	int val_a = ValoareBaza10(a.value, a.baza);
+	int val_b = ValoareBaza10(b.value, b.baza);
 	int diferenta=val_a-val_b;
 	Number rezultat(diferenta);
 	rezultat.SwitchBase(baza);
 	return rezultat;
 }
-Number operator+=(const Number& a, const Number& b)
+Number& Number::operator+=(const Number& other)
 {
-	int baza = b.baza;
-	if (a.baza < b.baza)
-	{
-		baza = b.baza;
-	}
-
-	int val_a = schimbare_baza(atoi(a.value), a.baza, 10);
-	int val_b = schimbare_baza(atoi(b.value), b.baza, 10);
-	int suma = val_a + val_b;
-	Number rezultat(suma);
-	rezultat.SwitchBase(baza);
-	return rezultat;
+	*this = *this + other;
+	return *this;
 	
 }
 bool Number::operator>(const Number& other)
 {
-	int val_a=schimbare_baza(atoi(this->value),this->baza,10);
-	int val_b=schimbare_baza(atoi(other.value),other.baza,10);
-	return val_a>val_b;
+	return ValoareBaza10(this->value, this->baza) > ValoareBaza10(other.value, other.baza);
 }
 bool Number::operator<(const Number& other)
 {
-	int val_a=schimbare_baza(atoi(this->value),this->baza,10);
-	int val_b=schimbare_baza(atoi(other.value),other.baza,10);
-	return val_a<val_b;
+	return ValoareBaza10(this->value, this->baza) < ValoareBaza10(other.value, other.baza);
 }
 bool Number::operator==(const Number& other)
 {
-	int val_a=schimbare_baza(atoi(this->value),this->baza,10);
-	int val_b=schimbare_baza(atoi(other.value),other.baza,10);
-	return val_a==val_b;
+	return ValoareBaza10(this->value, this->baza) == ValoareBaza10(other.value, other.baza);
 }
 bool Number::operator>=(const Number& other)
 {
-	int val_a=schimbare_baza(atoi(this->value),this->baza,10);
-	int val_b=schimbare_baza(atoi(other.value),other.baza,10);
-	return val_a>=val_b;
+	return ValoareBaza10(this->value, this->baza) >= ValoareBaza10(other.value, other.baza);
 }
 bool Number::operator<=(const Number& other)
 {
-	int val_a=schimbare_baza(atoi(this->value),this->baza,10);
-	int val_b=schimbare_baza(atoi(other.value),other.baza,10);
-	return val_a<=val_b;
+	return ValoareBaza10(this->value, this->baza) <= ValoareBaza10(other.value, other.baza);
 }
 Number& Number::operator--()
 {

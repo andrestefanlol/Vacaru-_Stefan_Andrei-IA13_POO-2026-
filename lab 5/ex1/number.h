@@ -16,7 +16,7 @@ public:
 	Number& operator=(const char* val);
 	friend Number operator+(const Number& a, const Number& b);
 	friend Number operator-(const Number& a, const Number& b);
-	friend Number operator +=(const Number& a, const Number& b);
+	Number& operator+=(const Number& a);
 	bool operator>(const Number& other);
 	bool operator<(const Number& other);
 	bool operator==(const Number& other);
