@@ -10,8 +10,8 @@ public:
 	Number(const Number& other);
 	Number(Number&& other);
 	~Number();
-	Number& operator=(const Number& other);//move
-	Number& operator=(Number&& other);//copy
+	Number& operator=(const Number& other);//copy
+	Number& operator=(Number&& other);//move
 	Number& operator=(int val);
 	Number& operator=(const char* val);
 	friend Number operator+(const Number& a, const Number& b);
