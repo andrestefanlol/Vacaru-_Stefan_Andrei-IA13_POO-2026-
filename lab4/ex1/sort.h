@@ -8,7 +8,6 @@ private:
     int* v;
     int count;
 public:
-    // add constuctors
 	Sort(int count,int min, int max);
 	Sort(initializer_list<int> list);
 	Sort(int v[], int el);

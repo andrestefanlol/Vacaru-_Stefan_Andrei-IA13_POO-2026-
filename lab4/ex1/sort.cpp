@@ -53,7 +53,8 @@ Sort::Sort(int count, ...)
 Sort::Sort(char s[])
 {
 	Sort::count = 0;
-
+	char copy[100];
+	strcpy(copy, s);
 	char* t = strtok(s, ",");
 	while (t != NULL)
 	{
@@ -61,6 +62,7 @@ Sort::Sort(char s[])
 		
 		t = strtok(NULL, ",");
 	}
+	strcpy(s, copy);
 	char* t2 = strtok(s, ",");
 	Sort::v = new int(Sort::count);
 	int i = 0;
@@ -98,7 +100,7 @@ int Sort::GetElementFromIndex(int index)
 }
 void Sort::BubbleSort(bool ascendent)
 {
-	int ok = 0;
+	int ok;
 	do {
 		ok = 0;
 		for (int i = 0; i < Sort::count - 1; i++)

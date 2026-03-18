@@ -32,6 +32,7 @@ int main() {
     lista3.QuickSort(true);
     cout << "Dupa QuickSort (crescator): ";
     lista3.Print();
-
+    Sort s2 = lista1;
+	s2.Print();
     return 0;
 }
